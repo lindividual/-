@@ -41,7 +41,7 @@ sa.quick('autoTrack');
 ## 事件埋点代码
 
 ### LoginSuccess(登录成功）
-在fanc.js文件的登录方法中添加该事件。
+在func.js文件的登录方法中添加该事件。
 ```javascript
 /**
          * 登录方法
