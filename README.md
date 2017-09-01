@@ -38,9 +38,9 @@ sa.quick('autoTrack');
 </script>
 ```
 
-## 事件埋点代码
+## 事件埋点代码-PC
 
-### LoginSuccess(登录成功）
+### LoginSuccess / RegisterSuccess (登录成功 / 注册成功）
 在func.js文件的登录方法中添加该事件。
 ```javascript
 /**
@@ -198,7 +198,7 @@ submitHandler: function(form) {
         }
 ```
 
-### 预约成功事件
+### PEAppoinmentSuccess（预约成功事件）
 在pages.js的预约方法中添加该事件
 ```javascript
  //私募基金首页和列表页预约弹窗验证
