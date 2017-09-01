@@ -146,3 +146,54 @@ sa.quick('autoTrack');
     }
 
 ```
+
+### PERealNameAuthentication（完成实名认证）
+在authentication.js文件中的实名认证方法中添加该事件
+```javascript
+submitHandler: function(form) {
+            //表单验证成功  提交
+            var checkVal1 = $('#checked1').attr('data-check'),
+                checkVal2 = $('#checked2').attr('data-check');
+            if (checkVal1 != 'checked' && checkVal2 != 'checked') {
+                $('#check-error,#check-error1').html('请勾选声明').show();
+                return;
+            }
+            if (checkVal1 != 'checked') {
+                $('#check-error').html('请勾选声明').show();
+                return;
+            }
+            if (checkVal2 != 'checked') {
+                $('#check-error1').html('请勾选声明').show();
+                return;
+            }
+
+            if (!$('#pwdNextBtn').hasClass('btn-disable')) {
+                dataLoaderShow();
+                $('#pwdNextBtn').addClass('btn-disable');
+
+                $.ajax({
+                    url: '/account/submitAuth',
+                    type: 'POST',
+                    async: true,
+                    dataType: "json",
+                    data: $(form).serializeArray(),
+                    success: function (data) {
+                        dataLoaderHide();
+                        $('#pwdNextBtn').removeClass('btn-disable');
+                        if (data.code == '1') {
+                            // 实名认证成功，调用sa.track上报事件
+                            sa.track('PERiskAssessment',{
+                            })；
+                            location.href = encodeURI('/account/riskAssessment');
+                        } else {
+                            if(data.message === '真实姓名或身份证号码不能为空'){
+                                $('#idcard-error').html(data.message).show();
+                            }else{
+                                $('#check-error').html(data.message).show();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+```
