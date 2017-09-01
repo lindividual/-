@@ -41,7 +41,7 @@ sa.quick('autoTrack');
 ## 事件埋点代码
 
 ### LoginSuccess(登录成功）
-在登录方法中添加该事件
+在登录方法中添加该事件。
 ```javascript
 /**
          * 登录方法
@@ -86,11 +86,18 @@ sa.quick('autoTrack');
                         }
 
                     } else {
-                        //登录成功后，获取cookie内的tdfrom，调用sa.track，上报登录成功事件。
-                        var sourceChannel = document.cookie.get("tdfrom");
-                        sa.track('LoginSuccess', {
-                          SourceChannel: sourceChannel
-                        });
+                        var sourceChannel = document.cookie.get("tdfrom");
+                        //登录成功，获取cookie内的tdfrom，调用sa.track，上报登录成功事件。
+                        if (btnEle == '#register-btn' || form = form#alertLoginForm){
+                          sa.track('LoginSuccess', {
+                            SourceChannel: sourceChannel
+                          });
+                        }else{
+                        //注册成功，获取cookie内的tdfrom，调用sa.track，上报注册成功事件。
+                          sa.track('RegisterSuccess', {
+                            SourceChannel: sourceChannel
+                          });
+                        }
                         var jumpurl;
                         if(type=="alertLogin"){
                             window.top.location=document.URL;
@@ -104,3 +111,8 @@ sa.quick('autoTrack');
         },
 ```
 
+### PERiskAssessment(完成风险评测）
+
+```javascript
+
+```
