@@ -201,6 +201,79 @@ submitHandler: function(form) {
 ### PEAppoinmentSuccess（预约成功事件）
 在pages.js的预约方法中添加该事件
 ```javascript
+//基金列表页和详情页在线预约右边
+    $('#appointment').validate({
+        errorPlacement: function(error, element) {
+            error.appendTo(element.parent().find('.error-mes'));
+        },
+        ignore: "",
+        rules: {
+            realNo2: {
+                required: true,
+                isMobile: true
+            },
+            realName2: {
+                required: true
+            }
+        },
+        messages: {
+            realNo2: {
+                required: '请输入11位手机号码',
+                isMobile: '请输入正确的手机号码'
+            },
+            realName2: {
+                required: '请输入您的名字',
+                maxlength: '您的名字不能超过10个字'
+            }
+        },
+        submitHandler: function(form) {
+            var telNo = $("#realNo2").val();
+            var userName =$("#realName2").val();
+            var productId = $('#rProcuctId').val();
+            booking(userName, telNo, productId, function (r) {
+                closePop('.Alert', '.MaskDiv');
+                showPop('#alertMsg','.MaskDiv',{
+                    title: '温馨提示',
+                    msg: '<i class="i-alert-right"></i>恭喜您，预约成功！',
+                    tips: '我们将在20分钟内回电话给您，来电号码为：<b>'+r.data.telno+'</b>'
+                });
+            },function (r) {
+                // 获取tdfrom
+                var sourceChannel = document.cookie.get("tdfrom");
+                // 预约成功时调用
+                sa.track('PERiskAssessment',{
+                // 私募项目名称
+                PEProjectName: PEProjectName,
+                // 私募项目类型
+                PEProjectType: PEProjectType,
+                // 私募项目规模
+                PEProjectScale: PEProjectScale,
+                // 私募项目起投金额
+                MinInvestAmount: MinInvestAmount,
+                // 私募项目存续期限
+                PEProjectDeadLine: PEProjectDeadLine,
+                // 私募项目投资范围
+                PEProjectScope: PEProjectScope,
+                // 私募项目资本类型
+                PEProjectCapitalType: PEProjectCapitalType,
+                // 私募项目点评
+                PEProjectIntro: PEProjectIntro,
+                // 预约人姓名
+                AppoinmentName: AppoinmentName,
+                // 预约人手机号码
+                AppoinmentNumber: AppoinmentNumber,
+                // 渠道来源
+                SourceChannel: sourceChannel
+              })；
+            dataLoaderHide();
+                closePop('.Alert', '.MaskDiv');
+                showPop('#alertMsg','.MaskDiv',{
+                    title: '温馨提示',
+                    msg: '<i class="i-alert-warning"></i>'+r.message
+                });
+            });
+        }
+    });
  //私募基金首页和列表页预约弹窗验证
     $('#alertAppointmentForm').validate({
         errorPlacement: function(error, element) {
