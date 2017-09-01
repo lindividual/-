@@ -41,7 +41,7 @@ sa.quick('autoTrack');
 ## 事件埋点代码
 
 ### LoginSuccess(登录成功）
-在登录方法中添加该事件。
+在fanc.js文件的登录方法中添加该事件。
 ```javascript
 /**
          * 登录方法
@@ -104,7 +104,6 @@ sa.quick('autoTrack');
                         }else{
                             window.top.location = $("#retUrl").val();
                         }
-
                     }
                 }
             });
@@ -112,7 +111,38 @@ sa.quick('autoTrack');
 ```
 
 ### PERiskAssessment(完成风险评测）
-
+在authentication.js文件中的riskResult方法中添加该事件
 ```javascript
+//结果页面
+
+    riskResult();
+
+    function riskResult() {
+        var myCount = $('.mycount').html(),
+            testType = $('.testtype'),
+            fitProduct = $('.fit-product');
+ 
+        if (myCount <= 20) {
+            testType.html('保守型');
+            fitProduct.html('低');
+        } else if (myCount >= 21 && myCount <= 34) {
+            testType.html('稳健型');
+            fitProduct.html('低、中低');
+        } else if (myCount >= 35 && myCount <= 54) {
+            testType.html('平衡型');
+            fitProduct.html('低、中低、中等');
+        } else if (myCount >= 55 && myCount <= 74) {
+            testType.html('成长型');
+            fitProduct.html('低、中低、中等、中高等');
+        } else if (myCount >= 75 && myCount <= 100) {
+            testType.html('进取型');
+            fitProduct.html('低、中低、中等、中高及高');
+        }
+        
+        sa.track('PERiskAssessment',{
+          RiskScore: myCount,
+          RiskType: testType
+        })
+    }
 
 ```
