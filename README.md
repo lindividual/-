@@ -1,8 +1,6 @@
-# 
-神策分析埋点文档
+#  神策分析埋点文档
 
-##
-sdk接入-示例代码
+## sdk接入-示例代码
 ```javascript
 <script>
 (function(para) {
@@ -40,17 +38,69 @@ sa.quick('autoTrack');
 </script>
 ```
 
-##
-事件埋点代码
+## 事件埋点代码
 
-###
-LoginSuccess(登录成功）
+### LoginSuccess(登录成功）
+在登录方法中添加该事件
 ```javascript
-sa.track('LoginSuccess', {
-        ProductId: '123456'，
-        ProductCatalog: "Laptop Computer",
-        ProductName: "MacBook Pro",
-        ProductPrice: 123.45
-    });
+/**
+         * 登录方法
+         * @param form
+         * @param type
+         */
+        doAjax: function (form, type, btnEle) {
+            dataLoaderShow();
+
+            //表单验证成功  提交
+            var actionUrl = form.getAttribute("action");
+
+            $.ajax({
+                url: actionUrl,
+                data: $(form).serializeArray(),
+                type: "POST",
+                timeout : 8000,
+                dataType: "JSON",
+                complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                    if(status=='timeout'){//超时,status还有success,error等值的情况
+                        if( $('.errortips').length>0){
+                            $('.errortips').html("登录失败");
+                        }else if($("#protocol-error").length>0){
+                            $('#protocol-error').show().html("注册失败");
+                        }
+                    }
+                },
+                success: function (callBackData) {
+                    dataLoaderHide();
+                    $(btnEle).removeClass('btn-disable');
+                    if (callBackData.code != "1") {
+                        if (type == "login" || type=="alertLogin") {
+                            $('.errortips').html(callBackData.message);
+                        } else {
+                            if (callBackData.code == "-55") {
+                                $('#imgcode-error').show().html(callBackData.message);
+                            } else if (callBackData.code == "-5") {
+                                $('#mobilecode-error').show().html(callBackData.message);
+                            } else {
+                                $('#protocol-error').show().html(callBackData.message);
+                            }
+                        }
+
+                    } else {
+                        //登录成功后，获取cookie内的tdfrom，调用sa.track，上报登录成功事件。
+                        var sourceChannel = document.cookie.get("tdfrom");
+                        sa.track('LoginSuccess', {
+                          SourceChannel: sourceChannel
+                        });
+                        var jumpurl;
+                        if(type=="alertLogin"){
+                            window.top.location=document.URL;
+                        }else{
+                            window.top.location = $("#retUrl").val();
+                        }
+
+                    }
+                }
+            });
+        },
 ```
 
