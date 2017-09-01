@@ -1,4 +1,4 @@
-# -
+# 
 神策分析埋点文档
 
 ##
@@ -21,13 +21,36 @@ sdk接入-示例代码
     w[n].para = para;
   }
 })({
-  sdk_url: 'https://static.sensorsdata.cn/sdk/1.8.9/sensorsdata.min.js',
+  // SDK 文件的存放地址
+  sdk_url: '.../sensorsdata.min.js',
   name: 'sa',
-  web_url: 'https://sensordata.tdw.cn/?project=production',
-  server_url: 'https://sensorslog.tdw.cn/sa?project=production',
+  // 数据上报地址
+  web_url: 'https://sensordata.tdw.cn/?project=production',
+  // 配置分发地址
+  server_url: 'https://sensorslog.tdw.cn/sa?project=production',
   heatmap:{}
 });
+//若用户已登录，将用户的团贷网userName设置为用户的loginID。PS:本段代码仅供参考。
+var user_id = jaaulde.utils.cookies.get("TDWUserName");
+  if (user_id != null) {
+     sa.login(user_id);
+  }
+//启动自动跟踪
 sa.quick('autoTrack');
 </script>
 ```
-    
+
+##
+事件埋点代码
+
+###
+LoginSuccess(登录成功）
+```javascript
+sa.track('LoginSuccess', {
+        ProductId: '123456'，
+        ProductCatalog: "Laptop Computer",
+        ProductName: "MacBook Pro",
+        ProductPrice: 123.45
+    });
+```
+
